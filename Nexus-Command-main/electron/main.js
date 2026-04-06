@@ -29,6 +29,8 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
+      sandbox: false,
+      webviewTag: true,
       webSecurity: !isDev
     },
     titleBarStyle: 'default',
@@ -155,6 +157,19 @@ ipcMain.handle('db:verify', async (event, { password }) => {
     const result = await dbModule.verifyAndOpen(dbPath, password)
     if (result.success) {
       db = result.db
+      // Run migrations for any new tables added after initial setup
+      try {
+        db.exec(`
+          CREATE TABLE IF NOT EXISTS social_messages (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            platform TEXT UNIQUE NOT NULL,
+            total INTEGER DEFAULT 0,
+            replied INTEGER DEFAULT 0,
+            unreplied INTEGER DEFAULT 0,
+            updated_at TEXT DEFAULT (datetime('now'))
+          );
+        `)
+      } catch (e) { /* table already exists */ }
       startWindowTracking()
     }
     return result

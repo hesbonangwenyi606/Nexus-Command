@@ -15,6 +15,7 @@ import Contacts from './components/Contacts/Contacts'
 import AutomationRules from './components/Automation/AutomationRules'
 import Analytics from './components/Analytics/Analytics'
 import Settings from './components/Settings/Settings'
+import SocialHub from './components/SocialHub/SocialHub'
 
 export const AppContext = createContext(null)
 
@@ -82,6 +83,7 @@ function AppContent() {
           <Route path="/automation" element={<AutomationRules />} />
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/social" element={<SocialHub />} />
         </Routes>
       </main>
       <Toast notifications={notifications} removeNotification={removeNotification} />
